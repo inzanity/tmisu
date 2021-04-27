@@ -1,21 +1,26 @@
 
-TARGET	=	tiramisu
-SRC		:=	src/tiramisu.c src/output.c
+TARGET	=	tmisu
+SRC    :=	src/tmisu.c src/output.c
+HEDRS  :=	src/tmisu.h src/output.h
 
 PREFIX ?=	/usr/local
 
-CFLAGS +=	-Wall -Wno-unused-value
-IFLAGS  =	$(shell pkg-config --cflags glib-2.0 gio-2.0)
-LFLAGS	=	$(shell pkg-config --libs glib-2.0 gio-2.0)
+CFLAGS +=	-W -Wall -std=c99
+IFLAGS	=	$(shell pkg-config --cflags dbus-1)
+LFLAGS	=	$(shell pkg-config --libs dbus-1)
+OBJ    :=	$(patsubst %.c,%.o,$(SRC))
 
 all: $(TARGET)
 
+%.o: %.c $(HDRS)
+	$(CC) -c $< $(CFLAGS) $(IFLAGS) -o $@
+
 $(TARGET): $(OBJ)
-	$(CC) $(CFLAGS) $(IFLAGS) $(SRC) $(LFLAGS) $(LDFLAGS) -o $(TARGET)
+	$(CC) $(CFLAGS) $(IFLAGS) $(OBJ) $(LFLAGS) $(LDFLAGS) -o $(TARGET)
 
 install: $(TARGET)
 	mkdir -p $(DESTDIR)$(PREFIX)/bin
 	install $(TARGET) $(DESTDIR)$(PREFIX)/bin/$(TARGET)
 
 clean:
-	$(RM) ./tiramisu
+	$(RM) -f $(OBJ) $(TARGET)

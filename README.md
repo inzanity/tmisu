@@ -1,9 +1,9 @@
 # Desktop notifications, the UNIX way
 
-tiramisu is a notification daemon based on dunst that outputs notifications
+tmisu is a notification daemon based on tiramisu that outputs notifications
 to STDOUT in order to allow the user to process notifications any way they prefer.
 
-<div align="center"><img src="https://github.com/Sweets/tiramisu/blob/master/example.gif"/></div>
+tmisu is basically a rewrite without GLib, and using libdbus instead.
 
 # Why?
 
@@ -40,7 +40,7 @@ Redirecting output of tiramisu to the input of another program is the ideal meth
 tiramisu.
 
 ```
-tiramisu | your-application
+tmisu | your-application
 ```
 
 By default tiramisu outputs notifications in a psuedo-key-value line format.
@@ -49,7 +49,7 @@ You can supply the `-j` flag to output notification data in JSON format.
 ### Example of default output
 
 ```
-$ tiramisu
+$ tmisu
 ```
 
 ```
