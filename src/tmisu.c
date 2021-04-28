@@ -60,8 +60,8 @@ DBusHandlerResult handle_message(DBusConnection *connection, DBusMessage *messag
 	} else if (dbus_message_is_method_call(message, "org.freedesktop.Notifications", "GetServerInformation")) {
 		DBusMessage *reply = dbus_message_new_method_return(message);
 		dbus_message_append_args(reply,
-					 DBUS_TYPE_STRING, &(const char *){ "tiramisu" },
-					 DBUS_TYPE_STRING, &(const char *){ "Sweets" },
+					 DBUS_TYPE_STRING, &(const char *){ "tmisu" },
+					 DBUS_TYPE_STRING, &(const char *){ "inz" },
 					 DBUS_TYPE_STRING, &(const char *){ "1.0" },
 					 DBUS_TYPE_STRING, &(const char *){ "1.2" },
 					 DBUS_TYPE_INVALID);
