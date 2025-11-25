@@ -9,10 +9,12 @@
 
 #include "tmisu.h"
 #include "output.h"
+#include "command.h"
 
 struct conf {
 	enum output_format fmt;
 	const char *delimiter;
+	const char *command;
 };
 
 DBusHandlerResult handle_message(DBusConnection *connection, DBusMessage *message, void *user_data)
@@ -87,7 +89,10 @@ DBusHandlerResult handle_message(DBusConnection *connection, DBusMessage *messag
 		if (!dbus_message_has_signature(message, "susssasa{sv}i"))
 			return DBUS_HANDLER_RESULT_NOT_YET_HANDLED;
 		reply = dbus_message_new_method_return(message);
-		output_notification(message, ++notification_id, cnf->fmt, cnf->delimiter);
+		if (!cnf->command)
+			output_notification(message, ++notification_id, cnf->fmt, cnf->delimiter);
+		else
+			run_command(message, cnf->command, ++notification_id);
 		dbus_message_append_args(reply,
 					 DBUS_TYPE_UINT32, &(dbus_uint32_t){ notification_id },
 					 DBUS_TYPE_INVALID);
@@ -110,18 +115,22 @@ void sig_handler(int signal)
 
 int main(int argc, char **argv) {
 	/* Parse arguments */
-	struct conf cnf = { FORMAT_TEXT, "\n" };
+	struct conf cnf = { FORMAT_TEXT, "\n", NULL };
 
 	char argument;
-	while ((argument = getopt(argc, argv, "hjd:")) >= 0) {
+	while ((argument = getopt(argc, argv, "hjd:c:")) >= 0) {
 		switch (argument) {
 		case 'd':
 			cnf.delimiter = optarg;
+			break;
+		case 'c':
+			cnf.command = optarg;
 			break;
 		case 'h':
 			printf("%s\n",
 			       "tiramisu -[h|d|j]\n"
 			       "-h\tHelp dialog\n"
+			       "-c\tRun command on notification\n"
 			       "-d\tDelimeter for default output style.\n"
 			       "-j\tUse JSON output style\n");
 			return EXIT_SUCCESS;

@@ -1,7 +1,7 @@
 
 TARGET	=	tmisu
-SRC    :=	src/tmisu.c src/output.c
-HEDRS  :=	src/tmisu.h src/output.h
+SRC    :=	src/tmisu.c src/output.c src/command.c
+HEDRS  :=	src/tmisu.h src/output.h src/command.h
 
 PREFIX ?=	/usr/local
 
